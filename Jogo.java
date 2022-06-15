@@ -3,26 +3,57 @@ import java.util.Random;
 public class Jogo {
 
     private Tabuleiro tabuleiro;
+    private int tamanho;
 
-    public int quantidadeDeRecompensas = 20;
-    public float relacaoRecompensaBomba = 0.5f;
-    public int quantidadeDeBombas = Math.round(quantidadeDeRecompensas*relacaoRecompensaBomba);
+    public int quantidadeDeRecompensas;
+    public float relacaoRecompensaBomba;
+    public int quantidadeDeBombas;
+    int quantidadeDeVazios;
+    Recompensa[] recompensas;
+    Bomba[] bombas;
+    Vazio[] vazios;
+
 
     public int pontos = 0;
-
     private int estado = 0;
 
-    int quantidadeDeVazios = 64-(quantidadeDeRecompensas + quantidadeDeBombas);
+    public Jogo(int tamanho, String dificuldade) {
+        this.tamanho = tamanho;
 
-    Recompensa[] recompensas = new Recompensa[quantidadeDeRecompensas];
-    Bomba[] bombas = new Bomba[Math.round(quantidadeDeBombas)];
-    Vazio[] vazios = new Vazio[quantidadeDeVazios];
-
-    public Jogo() {
-        tabuleiro = new Tabuleiro();
+        calcularElementos(dificuldade);
         criarPecas();
     }
     
+    void calcularElementos(String dificuldade){
+
+        switch (dificuldade){
+
+            case "facil":
+
+                quantidadeDeRecompensas = 16;
+                relacaoRecompensaBomba = 0.5f;
+                quantidadeDeBombas = Math.round(quantidadeDeRecompensas*relacaoRecompensaBomba);
+                break;
+
+            case "medio":
+                quantidadeDeRecompensas = 26;
+                relacaoRecompensaBomba = 0.5f;
+                quantidadeDeBombas = Math.round(quantidadeDeRecompensas*relacaoRecompensaBomba);
+                break;
+            case "dificil":
+                quantidadeDeRecompensas = 34;
+                relacaoRecompensaBomba = 0.5f;
+                quantidadeDeBombas = Math.round(quantidadeDeRecompensas*relacaoRecompensaBomba);
+                break;
+        }
+
+        quantidadeDeVazios = (tamanho*tamanho)-(quantidadeDeRecompensas + quantidadeDeBombas);
+        recompensas = new Recompensa[quantidadeDeRecompensas];
+        bombas = new Bomba[Math.round(quantidadeDeBombas)];
+        vazios = new Vazio[quantidadeDeVazios];
+        tabuleiro = new Tabuleiro(tamanho);
+    }
+
     private void criarPecas() {
 
         for(int i = 0; i < quantidadeDeVazios; i++)
@@ -49,7 +80,7 @@ public class Jogo {
             while(!found)
             {
                 found = false;
-                Casa c = tabuleiro.getCasa(random.nextInt(8), random.nextInt(8));
+                Casa c = tabuleiro.getCasa(random.nextInt(tamanho), random.nextInt(tamanho));
                 if(!c.possuiElemento())
                 {
                     r.setCasa(c);
@@ -68,7 +99,7 @@ public class Jogo {
             while(!found)
             {
                 found = false;
-                Casa c = tabuleiro.getCasa(random.nextInt(8), random.nextInt(8));
+                Casa c = tabuleiro.getCasa(random.nextInt(tamanho), random.nextInt(tamanho));
                 if(!c.possuiElemento())
                 {
                     b.setCasa(c);
@@ -87,7 +118,7 @@ public class Jogo {
             while(!found)
             {
                 found = false;
-                Casa c = tabuleiro.getCasa(random.nextInt(8), random.nextInt(8));
+                Casa c = tabuleiro.getCasa(random.nextInt(tamanho), random.nextInt(tamanho));
                 if(!c.possuiElemento())
                 {
                     v.setCasa(c);

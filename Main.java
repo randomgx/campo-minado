@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Main {
 
     /*
@@ -11,7 +13,23 @@ public class Main {
     */
 
     public static void main(String[] args) {
-        JanelaPrincipal mainGame = new JanelaPrincipal();
+
+        Scanner s = new Scanner(System.in);
+
+        System.out.println("Escreva a dificuldade do jogo:");
+        System.out.println("facil");
+        System.out.println("medio");
+        System.out.println("dificil");
+
+        System.out.print("->");
+        String dificuldade = s.nextLine();
+        while(!dificuldade.equals("facil") && !dificuldade.equals("medio") && !dificuldade.equals("dificil")){
+            System.out.println("Dificuldade nao reconhecida. Digite novamente");
+            dificuldade = s.nextLine();
+        }
+        s.close();
+
+        JanelaPrincipal mainGame = new JanelaPrincipal(dificuldade);
         System.out.println("Jogo aberto, instancia " + mainGame);
     }
 }

@@ -1,15 +1,10 @@
 import javax.swing.JPanel;
 
-/**
- * Interface Grafica do Tabuleiro do jogo.
- * 
- * @author Alan Moraes &lt;alan@ci.ufpb.br&gt;
- * @author Leonardo Villeth &lt;lvilleth@cc.ci.ufpb.br&gt;
- */
 public class TabuleiroGUI extends JPanel {
 
     private JanelaPrincipal janela;
     private CasaGUI[][] casas;
+    private int tamanho;
 
     /**
      * Creates new form Tabuleiro
@@ -18,21 +13,22 @@ public class TabuleiroGUI extends JPanel {
         // Construtor sem par�metros requerido pela especifica�?o JavaBeans.
     }
 
-    public TabuleiroGUI(JanelaPrincipal janela) {
+    public TabuleiroGUI(JanelaPrincipal janela, int tamanho) {
         this.janela = janela;
+        this.tamanho = tamanho;
         initComponents();
         criarCasas();
     }
 
     /**
-     * Preenche o tabuleiro com 64 casas
+     * Preenche o tabuleiro com casas
      */
     private void criarCasas() {
-        casas = new CasaGUI[8][8];
+        casas = new CasaGUI[tamanho][tamanho];
         // De cima para baixo
-        for (int y = 7; y >= 0; y--) {
+        for (int y = (tamanho-1); y >= 0; y--) {
             // Da esquerda para a direita
-            for (int x = 0; x < 8; x++) {
+            for (int x = 0; x < tamanho; x++) {
                 CasaGUI casa = new CasaGUI(x, y, this);
                 casas[x][y] = casa;
                 add(casa);
@@ -41,8 +37,8 @@ public class TabuleiroGUI extends JPanel {
     }
 
     public void atualizar(Jogo jogo) {
-        for (int x = 0; x < 8; x++) {
-            for (int y = 0; y < 8; y++) {
+        for (int x = 0; x < tamanho; x++) {
+            for (int y = 0; y < tamanho; y++) {
                 CasaGUI casaGUI = casas[x][y];
                 
                 Tabuleiro tabuleiro = jogo.getTabuleiro();
@@ -86,7 +82,7 @@ public class TabuleiroGUI extends JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         //editar posteriormente para os valores dinamicos de fase
-        setLayout(new java.awt.GridLayout(8, 8));
+        setLayout(new java.awt.GridLayout(tamanho, tamanho));
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

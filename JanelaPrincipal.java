@@ -8,6 +8,10 @@ import javax.swing.*;
 public class JanelaPrincipal extends JFrame {
 
     private Jogo jogo;
+    private int delay;
+    private static String dificuldade;
+    private static int tamanho;
+    Timer timer;
     
     /**
      * Responde aos cliques realizados no tabuleiro.
@@ -16,22 +20,24 @@ public class JanelaPrincipal extends JFrame {
      */
     public void reagir(CasaGUI casaClicada) {
         if (casaClicada.possuiPeca()) {
-            jogo.mostrarPeca(casaClicada.getPosicaoX(), casaClicada.getPosicaoY());
-            atualizar();
-            lbl_a.setText(jogo.pontos + " pontos");
-            lbl_b.setText(jogo.quantidadeDeRecompensas + " recompensas");
-            switch(jogo.getEstado())
-            {
-                case 0:
-                    break;
-                case 1:
-                    JOptionPane.showMessageDialog(this, "Parabéns, você venceu com " + jogo.pontos + " pontos");
-                    criarNovoJogo();
-                    break;
-                case 2:
-                    JOptionPane.showMessageDialog(this, "Você clicou em uma bomba e perdeu! Conseguiu " + jogo.pontos + " pontos");
-                    criarNovoJogo();
-                    break;
+            if(!jogo.getTabuleiro().getCasa(casaClicada.getPosicaoX(), casaClicada.getPosicaoY()).getElemento().revelado){
+                jogo.mostrarPeca(casaClicada.getPosicaoX(), casaClicada.getPosicaoY());
+                atualizar();
+                lbl_a.setText(jogo.pontos + " pontos");
+                lbl_b.setText(jogo.quantidadeDeRecompensas + " recompensas");
+                switch(jogo.getEstado())
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        JOptionPane.showMessageDialog(this, "Parabéns, você venceu com " + jogo.pontos + " pontos");
+                        criarNovoJogo();
+                        break;
+                    case 2:
+                        JOptionPane.showMessageDialog(this, "Você clicou em uma bomba e perdeu! Conseguiu " + jogo.pontos + " pontos");
+                        criarNovoJogo();
+                        break;
+                }
             }
         }
         else {
@@ -44,9 +50,28 @@ public class JanelaPrincipal extends JFrame {
     /**
      * Construtor da classe.
      */
-    public JanelaPrincipal() {
-        initComponents();
+    public JanelaPrincipal(String dificuldade) {
+        JanelaPrincipal.dificuldade = dificuldade;
 
+        switch(dificuldade){
+
+            case "facil": 
+                JanelaPrincipal.tamanho = 8;
+                this.delay = 1000;
+                break;
+            case "medio": 
+                JanelaPrincipal.tamanho = 12;
+                this.delay = 1500;
+                break;
+            case "dificil": 
+                JanelaPrincipal.tamanho = 16;
+                this.delay = 2000;
+                break;
+
+        }
+
+        timer = new Timer(delay, al);
+        initComponents();
         criarNovoJogo();
 
         lbl_c.setText(jogo.quantidadeDeBombas + " bombas");
@@ -77,12 +102,13 @@ public class JanelaPrincipal extends JFrame {
      * Cria um novo jogo e atualiza o tabuleiro gr�fico.
      */
     private void criarNovoJogo() {   
-        jogo = new Jogo();
+        jogo = new Jogo(tamanho, dificuldade);
         lbl_a.setText(jogo.pontos + " pontos");
         lbl_b.setText(jogo.quantidadeDeRecompensas + " recompensas");
         atualizar();
         timer.start();
     }
+
 
     ActionListener al=new ActionListener() {
         public void actionPerformed(ActionEvent ae) {
@@ -92,7 +118,8 @@ public class JanelaPrincipal extends JFrame {
         }
     };
 
-    Timer timer = new Timer(1000, al);
+    
+
 
     private void atualizar() {
         tabuleiroGUI.atualizar(jogo);
@@ -111,7 +138,7 @@ public class JanelaPrincipal extends JFrame {
         lbl_a = new javax.swing.JLabel();
         lbl_b = new javax.swing.JLabel();
         lbl_c = new javax.swing.JLabel();
-        tabuleiroGUI = new TabuleiroGUI(this);
+        tabuleiroGUI = new TabuleiroGUI(this, tamanho);
         jMenuBar1 = new javax.swing.JMenuBar();
         menuArquivo = new javax.swing.JMenu();
         menuNovo = new javax.swing.JMenuItem();
@@ -120,10 +147,10 @@ public class JanelaPrincipal extends JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        pnlLinhas.setLayout(new java.awt.GridLayout(8, 1));
+        pnlLinhas.setLayout(new java.awt.GridLayout(tamanho, 1));
 
 
-        pnlColunas.setLayout(new java.awt.GridLayout(1, 8));
+        pnlColunas.setLayout(new java.awt.GridLayout(1, tamanho));
 
         lbl_a.setFont(new java.awt.Font("Arimo", 0, 18)); // NOI18N
         lbl_a.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -191,7 +218,7 @@ public class JanelaPrincipal extends JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new JanelaPrincipal().setVisible(true);
+                new JanelaPrincipal(dificuldade).setVisible(true);
             }
         });
     }
