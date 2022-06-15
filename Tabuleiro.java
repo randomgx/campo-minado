@@ -10,10 +10,10 @@ public class Tabuleiro {
 
     private Casa[][] casas;
 
-    public Tabuleiro() {
-        casas = new Casa[8][8];
-        for (int x = 0; x < 8; x++) {
-            for (int y = 0; y < 8; y++) {
+    public Tabuleiro(int tamanho) {
+        casas = new Casa[tamanho][tamanho];
+        for (int x = 0; x < tamanho; x++) {
+            for (int y = 0; y < tamanho; y++) {
                 Casa casa = new Casa(x, y);
                 casas[x][y] = casa;
             }
